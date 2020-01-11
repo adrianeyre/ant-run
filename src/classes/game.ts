@@ -40,7 +40,7 @@ export default class Game implements IGame {
 	public handleInput = (playerResult: PlayerResultEnum, sprite?: ISprite): void => {
 		switch (playerResult) {
 			case PlayerResultEnum.SAFE:
-				break;
+				this.playerSafe(); break;
 			case PlayerResultEnum.MOVE:
 				this.moveBlock(sprite); break;
 			case PlayerResultEnum.DEAD:
@@ -61,6 +61,8 @@ export default class Game implements IGame {
 		this.time.setTime(this.sprites);
 		this.player.setStart(this.sprites);
 	}
+
+	private playerSafe = (): number => this.player.spaceMovedScore();
 
 	private looseLife = () => {
 		this.player.looseLife();

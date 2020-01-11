@@ -36,6 +36,7 @@ export default class Player implements IPlayer {
 
 	private imageIteration: boolean;
 
+	readonly SPACE_MOVED_SCORE: number = 5;
 	readonly INITIAL_PLAYER_LIVES: number = 3;
 	readonly INITIAL_PLAYER_X: number = 18;
 	readonly INITIAL_PLAYER_Y: number = 3;
@@ -77,6 +78,8 @@ export default class Player implements IPlayer {
 
 		this.setPlace(sprite);
 	}
+
+	public spaceMovedScore = (): number => this.score += this.SPACE_MOVED_SCORE;
 
 	public looseLife = (): void => {
 		this.lives --;

@@ -31,7 +31,7 @@ export default class Game implements IGame {
 		this.sprites = this.board.setBoard([]);
 		this.level = 1;
 		this.isGameInPlay = false;
-		this.iteration = 1;
+		this.iteration = 0;
 		this.timerInterval = this.DEFAULT_TIMER_INTERVAL;
 
 		this.time.setTime(this.sprites);
@@ -39,15 +39,17 @@ export default class Game implements IGame {
 
 	public handleInput = (playerResult: PlayerResultEnum, sprite?: ISprite): void => {
 		switch (playerResult) {
-			case PlayerResultEnum.NO_MOVE:
-				return;
+			case PlayerResultEnum.SAFE:
+				break;
 			case PlayerResultEnum.MOVE:
 				this.moveBlock(sprite); break;
 		}
 	}
 
 	public handleTimer = (): void => {
-		
+		this.iteration ++;
+		this.time.show(this.iteration, this.sprites);
+		this.player.move(this.sprites);
 	}
 
 	private moveBlock = (sprite?: ISprite): void | null => sprite ? sprite.move() : null

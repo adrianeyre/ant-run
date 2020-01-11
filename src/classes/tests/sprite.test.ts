@@ -33,7 +33,7 @@ describe('Sprite', () => {
 		expect(sprite.height).toEqual(8);
 		expect(sprite.zIndex).toEqual(5000);
 		expect(sprite.direction).toEqual(DirectionEnum.RIGHT);
-		expect(sprite.image).toEqual('block10.png');
+		expect(sprite.image).toEqual('block9.png');
 		expect(sprite.type).toEqual(SpriteTypeEnum.BLOCK);
 	});
 });

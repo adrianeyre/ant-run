@@ -6,6 +6,14 @@ import ImageEnum from './enums/image-enum';
 import Sprite from './sprite';
 
 export default class Board implements IBoard {
+	public startX: number;
+	public startY: number;
+
+	constructor() {
+		this.startX = 0;
+		this.startY = 0;
+	}
+
 	readonly SPRITE_BLOCKS_WIDTH: number = 8;
 	readonly SPRITE_BLOCKS_HEIGHT: number = 6;
 	readonly X_OFFSET: number = 7;
@@ -23,7 +31,32 @@ export default class Board implements IBoard {
 			}
 		}
 
+		this.setStart(sprites);
+		this.setBonus(sprites);
+
 		return sprites;
+	}
+
+	private setStart = (sprites: ISprite[]): void => {
+		this.startX = this.xVal();
+		this.startY = this.yVal();
+		const sprite = sprites.find((spr: ISprite) => spr.key === `sprite-${ this.startX }-${ this.startY }`);
+
+		if (!sprite) throw new Error('Start sprite not found!');
+		sprite.setType(ImageEnum.START);
+		sprite.setImage();
+	}
+
+	private setBonus = (sprites: ISprite[]): void => {
+		if (Math.floor(Math.random() * 100) < 80) return;
+
+		const x = this.xVal();
+		const y = this.yVal();
+		const sprite = sprites.find((spr: ISprite) => spr.key === `sprite-${ x }-${ y }`);
+
+		if (!sprite) throw new Error('Bonus sprite not found!');
+		sprite.setType(ImageEnum.BONUS);
+		sprite.setImage();
 	}
 
 	private newBlock = (x: number, y: number): ISprite => new Sprite({
@@ -40,4 +73,6 @@ export default class Board implements IBoard {
 
 	private randomDirection = (): DirectEnum => this.directions[Math.floor(Math.random() * this.directions.length)];
 	private randomImage = (): ImageEnum => this.images[Math.floor(Math.random() * this.images.length)];
+	private xVal = (): number => Math.floor(Math.random() * this.SPRITE_BLOCKS_WIDTH) + 1;
+	private yVal = (): number => Math.floor(Math.random() * this.SPRITE_BLOCKS_HEIGHT) + 1;
 }

@@ -1,6 +1,7 @@
 enum StriteTypeEnum {
 	BLOCK = 0,
-	TIME = 1,
+	START = 1,
+	TIME = 100,
 }
 
 export default StriteTypeEnum;

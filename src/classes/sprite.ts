@@ -40,7 +40,7 @@ export default class Sprite implements ISprite {
 		cross: [block1, block1, block1, block1],
 		corner: [block2, block3, block4, block5],
 		straight: [block6, block7, block6, block7],
-		start: [block8, block10, block11, block9],
+		start: [block8, block9, block10, block11],
 		bonus: [block12, block13, block12, block13],
 		time: [time, time, time, time],
 	}
@@ -55,8 +55,10 @@ export default class Sprite implements ISprite {
 		this.height = config.height;
 		this.zIndex = this.Z_INDEX;
 		this.direction = config.direction;
-		this.image = this.setImage();
+		this.image = ''
 		this.type = config.type;
+
+		this.setImage();
 	}
 
 	public move = (): void => {
@@ -73,8 +75,9 @@ export default class Sprite implements ISprite {
 				this.direction = DirectionEnum.UP; break;
 		}
 
-		this.image = this.setImage();
+		this.setImage();
 	}
 
-	private setImage = (): string => this.playerImages[this.imageType][this.direction];
+	public setType = (type: ImageEnum): ImageEnum => this.imageType = type;
+	public setImage = (): string => this.image = this.playerImages[this.imageType][this.direction];
 }

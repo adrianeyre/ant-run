@@ -14,7 +14,7 @@ export default interface ISprite {
 	image: string;
 	type: SpriteTypeEnum;
 	paths: number[][][];
-	move(): void;
+	move(playerX: number, playerY: number): void;
 	setImageType(type: ImageEnum): ImageEnum;
 	setType(type: SpriteTypeEnum): SpriteTypeEnum;
 	setImage(): string;

@@ -50,13 +50,12 @@ export default class Board implements IBoard {
 	}
 
 	private setBonus = (sprites: ISprite[]): void => {
-		if (Math.floor(Math.random() * 100) < 80) return;
-
 		const x = this.xVal();
 		const y = this.yVal();
-		const sprite = sprites.find((spr: ISprite) => spr.key === `sprite-${ x }-${ y }`);
+		const sprite = sprites.find((spr: ISprite) => spr.key === `sprite-${ x }-${ y }` && spr.type !== SpriteTypeEnum.START);
 
-		if (!sprite) throw new Error('Bonus sprite not found!');
+		if (!sprite) return;
+		sprite.setType(SpriteTypeEnum.BONUS);
 		sprite.setImageType(ImageEnum.BONUS);
 		sprite.setPath();
 		sprite.setImage();

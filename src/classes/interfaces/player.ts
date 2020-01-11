@@ -19,8 +19,11 @@ export default interface IPlayer {
 	image: string;
 	isAlive: boolean;
 	onBoard: boolean;
+	moveIntro(sprites: ISprite[]): void;
 	spaceMovedScore(): number;
+	nextLevelScore(): number;
 	looseLife(): void;
+	resetInto(): void;
+	playerBonus(): number;
 	move(sprites: ISprite[], blockWidth: number, blockHeight: number): PlayerResultEnum;
-	setStart(sprites: ISprite[]): void;
 }

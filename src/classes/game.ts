@@ -20,9 +20,11 @@ export default class Game implements IGame {
 	public isGameInPlay: boolean;
 	public timerInterval: number;
 
-	readonly DEFAULT_TIMER_INTERVAL: number = 1000;
+	readonly DEFAULT_TIMER_INTERVAL: number = 800;
+	readonly DEFAULT_TIMER_DECREMENT: number = 50;
+	readonly DEFAULT_TIMER_MIN: number = 50;
 	
-	readonly MAX_TIME: number = 30;
+	readonly MAX_BLOCKS: number = 30;
 	
 	constructor(config: IAntRunProps) {
 		this.player = new Player(config);
@@ -45,29 +47,53 @@ export default class Game implements IGame {
 				this.moveBlock(sprite); break;
 			case PlayerResultEnum.DEAD:
 				this.looseLife(); break;
+			case PlayerResultEnum.NEW_BLOCK:
+				this.updateTime(); break;
+			case PlayerResultEnum.BONUS_BLOCK:
+				this.playerBonus(); this.updateTime(); break;
 		}
 	}
 
 	public handleTimer = (): void => {
-		// this.iteration ++;
-		// this.time.show(this.iteration, this.sprites);
-		this.handleInput(this.player.move(this.sprites, 3, 3));
+		if (this.player.onBoard) {
+			this.handleInput(this.player.move(this.sprites, 3, 3));
+		} else {
+			this.player.moveIntro(this.sprites);
+		}
 	}
 
-	private moveBlock = (sprite?: ISprite): void | null => sprite ? sprite.move() : null
+	private updateTime = (): void => {
+		this.iteration ++;
+		this.time.show(this.iteration, this.sprites);
+
+		if (this.iteration >= this.MAX_BLOCKS) this.nextLevel();
+	}
+
+	private moveBlock = (sprite?: ISprite): void | null => sprite ? sprite.move(this.player.x, this.player.y) : null
 
 	private reset = (): void => {
+		this.iteration = 0;
 		this.sprites = this.board.setBoard([]);
 		this.time.setTime(this.sprites);
-		this.player.setStart(this.sprites);
+		this.player.resetInto();
 	}
 
 	private playerSafe = (): number => this.player.spaceMovedScore();
 
-	private looseLife = () => {
+	private looseLife = (): void => {
 		this.player.looseLife();
 		this.reset();
 		
 		if (!this.player.isAlive) this.isGameInPlay = false;
 	}
+
+	private nextLevel = (): void => {
+		this.level ++;
+		this.timerInterval -= this.DEFAULT_TIMER_DECREMENT;
+		if (this.timerInterval < this.DEFAULT_TIMER_MIN) this.timerInterval = this.DEFAULT_TIMER_MIN;
+		this.player.nextLevelScore();
+		this.reset();
+	}
+
+	private playerBonus = (): number => this.player.playerBonus();
 }

@@ -12,8 +12,6 @@ describe('Player', () => {
 		expect(player.y).toEqual(3);
 		expect(player.width).toEqual(1);
 		expect(player.height).toEqual(1);
-		expect(player.initialPlayerX).toEqual(18);
-		expect(player.initialPlayerY).toEqual(3);
 		expect(player.zIndex).toEqual(6000);
 		expect(player.direction).toEqual(DirectionEnum.RIGHT);
 		expect(player.score).toEqual(0);

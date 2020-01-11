@@ -67,8 +67,9 @@ export default class Sprite implements ISprite {
 		this.setImage();
 	}
 
-	public move = (): void => {
+	public move = (playerX: number, playerY: number): void => {
 		if (!this.visable) return;
+		if (this.playerOnSprite(playerX, playerY)) return;
 
 		switch (this.direction) {
 			case DirectionEnum.UP:
@@ -93,4 +94,10 @@ export default class Sprite implements ISprite {
 
 		this.paths = data.paths;
 	}
+
+	private playerOnSprite = (playerX: number , playerY: number) =>
+		playerX >= this.x &&
+		playerX < this.x + this.width &&
+		playerY >= this.y &&
+		playerY < this.y + this.height;
 }

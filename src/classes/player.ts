@@ -37,6 +37,8 @@ export default class Player implements IPlayer {
 	private imageIteration: boolean;
 
 	readonly SPACE_MOVED_SCORE: number = 5;
+	readonly NEXT_LEVEL_SCORE: number = 100;
+	readonly BONUS_SCORE: number = 50;
 	readonly INITIAL_PLAYER_LIVES: number = 3;
 	readonly INITIAL_PLAYER_X: number = 18;
 	readonly INITIAL_PLAYER_Y: number = 3;
@@ -71,26 +73,43 @@ export default class Player implements IPlayer {
 
 		this.setImage();
 	}
-
-	public setStart = (sprites: ISprite[]): void => {
-		const sprite = sprites.find((spr: ISprite) => spr.type === SpriteTypeEnum.START);
-		if (!sprite) throw new Error('Start block not found!');
-
-		this.setPlace(sprite);
-	}
-
+	
 	public spaceMovedScore = (): number => this.score += this.SPACE_MOVED_SCORE;
+	public nextLevelScore = (): number => this.score += this.NEXT_LEVEL_SCORE;
+	public playerBonus = (): number => this.score += this.BONUS_SCORE;
 
 	public looseLife = (): void => {
 		this.lives --;
 		if (this.lives < 1) this.isAlive = false;
 	}
 
+	public moveIntro = (sprites: ISprite[]): void => {
+		this.x ++;
+
+		if (this.x > 32) {
+			this.setStart(sprites);
+			this.onBoard = true;
+			return;
+		}
+
+		this.imageIteration = !this.imageIteration;
+		this.setImage();
+	}
+
+	public resetInto = (): void => {
+		this.x = this.INITIAL_PLAYER_X;
+		this.y = this.INITIAL_PLAYER_Y;
+		this.direction = DirectionEnum.RIGHT
+		this.onBoard = false;
+		this.setImage();
+	}
+
 	public move = (sprites: ISprite[], blockWidth: number, blockHeight: number): PlayerResultEnum => {
 		let x = this.x,
 			y = this.y,
 			blockX = this.blockX,
-			blockY = this.blockY;
+			blockY = this.blockY,
+			newBlockResult = PlayerResultEnum.NEW_BLOCK;
 
 		switch (this.direction) {
 			case DirectEnum.UP:
@@ -103,15 +122,30 @@ export default class Player implements IPlayer {
 				x--; blockX--; break;
 		}
 
-		if (blockX < 0) blockX = 2;
-		if (blockX > 2) blockX = 0;
-		if (blockY < 0) blockY = 2;
-		if (blockY > 2) blockY = 0;
+		let isNewBlock = false;
+		if (blockX < 0) {
+			blockX = 2; isNewBlock = true;
+		}
+		if (blockX > 2) {
+			blockX = 0; isNewBlock = true;
+		}
+		if (blockY < 0) {
+			blockY = 2; isNewBlock = true;
+		}
+		if (blockY > 2) {
+			blockY = 0; isNewBlock = true;
+		}
+
+		if (isNewBlock) newBlockResult = this.hideBlock(sprites, blockWidth, blockHeight);
 
 		const sprite = this.findSprite(sprites, blockWidth, blockHeight, x, y);
 		if (!sprite) {
 			this.goDownHole();
-			return PlayerResultEnum.SAFE;
+			return this.move(sprites, blockWidth, blockHeight);
+		}
+
+		if (!sprite.visable) {
+			return PlayerResultEnum.DEAD;
 		}
 
 		const path = sprite.paths[sprite.direction];
@@ -130,7 +164,15 @@ export default class Player implements IPlayer {
 		this.imageIteration = !this.imageIteration;
 		this.setImage();
 
-		return PlayerResultEnum.SAFE;
+		return isNewBlock ? newBlockResult : PlayerResultEnum.SAFE;
+	}
+
+	private hideBlock = (sprites: ISprite[], blockWidth: number, blockHeight: number): PlayerResultEnum => {
+		const sprite = this.findSprite(sprites, blockWidth, blockHeight, this.x, this.y);
+		if (!sprite) throw new Error('Cannot find block player was just on!');
+
+		sprite.visable = false;
+		return sprite.type === SpriteTypeEnum.BONUS ? PlayerResultEnum.BONUS_BLOCK : PlayerResultEnum.NEW_BLOCK
 	}
 
 	private updateDirection = (path: number[][], sprites: ISprite[], blockWidth: number, blockHeight: number): PlayerResultEnum => {
@@ -147,20 +189,20 @@ export default class Player implements IPlayer {
 	private goDownHole = () => {
 		switch (this.direction) {
 			case DirectionEnum.UP:
-				this.y = 24;
-				this.blockY = 2;
+				this.y = 25;
+				this.blockY = 3;
 				break;
 			case DirectionEnum.RIGHT:
-				this.x = 10;
-				this.blockX = 0;
+				this.x = 9;
+				this.blockX = -1;
 				break;
 			case DirectionEnum.DOWN:
-				this.y = 7;
-				this.blockY = 0;
+				this.y = 6;
+				this.blockY = -1;
 				break;
 			case DirectionEnum.LEFT:
-				this.x = 33;
-				this.blockX = 2;
+				this.x = 34;
+				this.blockX = 3;
 				break;
 		}
 	}
@@ -214,10 +256,16 @@ export default class Player implements IPlayer {
 		return DirectionEnum.DEAD;
 	}
 
+	private setStart = (sprites: ISprite[]): void => {
+		const sprite = sprites.find((spr: ISprite) => spr.type === SpriteTypeEnum.START);
+		if (!sprite) throw new Error('Start block not found!');
+
+		this.setPlace(sprite);
+	}
+
 	private tryUp = (path: number[][]) => path[this.blockY - 1][this.blockX] === 1;
 	private tryDown = (path: number[][]) => path[this.blockY + 1][this.blockX] === 1;
 	private tryRight = (path: number[][]) => path[this.blockY][this.blockX + 1] === 1;
 	private tryLeft = (path: number[][]) => path[this.blockY][this.blockX - 1] === 1;
-
 	private setImage = (): string => this.image = this.playerImages[this.direction][this.imageIteration ? 0 : 1];
 }

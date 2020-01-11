@@ -28,13 +28,13 @@ export default class Game implements IGame {
 		this.player = new Player(config);
 		this.board = new Board();
 		this.time = new Time();
-		this.sprites = this.board.setBoard([]);
+		this.sprites = [];
 		this.level = 1;
 		this.isGameInPlay = false;
 		this.iteration = 0;
 		this.timerInterval = this.DEFAULT_TIMER_INTERVAL;
 
-		this.time.setTime(this.sprites);
+		this.reset();
 	}
 
 	public handleInput = (playerResult: PlayerResultEnum, sprite?: ISprite): void => {
@@ -43,14 +43,29 @@ export default class Game implements IGame {
 				break;
 			case PlayerResultEnum.MOVE:
 				this.moveBlock(sprite); break;
+			case PlayerResultEnum.DEAD:
+				this.looseLife(); break;
 		}
 	}
 
 	public handleTimer = (): void => {
-		this.iteration ++;
-		this.time.show(this.iteration, this.sprites);
-		this.player.move(this.sprites);
+		// this.iteration ++;
+		// this.time.show(this.iteration, this.sprites);
+		this.handleInput(this.player.move(this.sprites, 3, 3));
 	}
 
 	private moveBlock = (sprite?: ISprite): void | null => sprite ? sprite.move() : null
+
+	private reset = (): void => {
+		this.sprites = this.board.setBoard([]);
+		this.time.setTime(this.sprites);
+		this.player.setStart(this.sprites);
+	}
+
+	private looseLife = () => {
+		this.player.looseLife();
+		this.reset();
+		
+		if (!this.player.isAlive) this.isGameInPlay = false;
+	}
 }

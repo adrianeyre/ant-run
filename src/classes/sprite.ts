@@ -1,5 +1,6 @@
 import ISpriteProps from './interfaces/sprite-props';
 import ISprite from './interfaces/sprite';
+import IBlocks from './interfaces/blocks';
 import DirectionEnum from './enums/direction-enum';
 import SpriteTypeEnum from './enums/sprite-type-enum';
 import ImageEnum from './enums/image-enum';
@@ -20,6 +21,8 @@ import block12 from '../images/block12.png';
 import block13 from '../images/block13.png';
 import time from '../images/time.png';
 
+import * as blocksData from './data/blocks';
+
 export default class Sprite implements ISprite {
 	public key: string;
 	public visable: boolean;
@@ -31,6 +34,7 @@ export default class Sprite implements ISprite {
 	public direction: DirectionEnum;
 	public image: string;
 	public type: SpriteTypeEnum;
+	public paths: number[][][];
 
 	private imageType: ImageEnum;
 
@@ -55,9 +59,11 @@ export default class Sprite implements ISprite {
 		this.height = config.height;
 		this.zIndex = this.Z_INDEX;
 		this.direction = config.direction;
-		this.image = ''
+		this.image = '';
 		this.type = config.type;
+		this.paths = [];
 
+		this.setPath();
 		this.setImage();
 	}
 
@@ -78,6 +84,13 @@ export default class Sprite implements ISprite {
 		this.setImage();
 	}
 
-	public setType = (type: ImageEnum): ImageEnum => this.imageType = type;
+	public setImageType = (imageType: ImageEnum): ImageEnum => this.imageType = imageType;
+	public setType = (type: SpriteTypeEnum): SpriteTypeEnum => this.type = type;
 	public setImage = (): string => this.image = this.playerImages[this.imageType][this.direction];
+	public setPath = (): void => {
+		const data = blocksData.default.find((data: IBlocks) => data.key === this.imageType);
+		if (!data) throw new Error('Cannot find paths data');
+
+		this.paths = data.paths;
+	}
 }

@@ -100,6 +100,7 @@ export default class AntRun extends React.Component<IAntRunProps, IAntRunState> 
 		this.handleTimerUpdates();
 
 		this.setState(prev => ({ game }));
+		if (!this.state.game.isGameInPlay) this.stopTimer();
 	}
 
 	private handleTimerUpdates = () => {

@@ -43,7 +43,9 @@ export default class Board implements IBoard {
 		const sprite = sprites.find((spr: ISprite) => spr.key === `sprite-${ this.startX }-${ this.startY }`);
 
 		if (!sprite) throw new Error('Start sprite not found!');
-		sprite.setType(ImageEnum.START);
+		sprite.setType(SpriteTypeEnum.START);
+		sprite.setImageType(ImageEnum.START);
+		sprite.setPath();
 		sprite.setImage();
 	}
 
@@ -55,7 +57,8 @@ export default class Board implements IBoard {
 		const sprite = sprites.find((spr: ISprite) => spr.key === `sprite-${ x }-${ y }`);
 
 		if (!sprite) throw new Error('Bonus sprite not found!');
-		sprite.setType(ImageEnum.BONUS);
+		sprite.setImageType(ImageEnum.BONUS);
+		sprite.setPath();
 		sprite.setImage();
 	}
 

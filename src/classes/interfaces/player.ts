@@ -7,10 +7,11 @@ export default interface IPlayer {
 	visable: boolean;
 	x: number;
 	y: number;
+	blockX: number;
+	blockY: number
 	width: number;
 	height: number;
-	initialPlayerX: number;
-	initialPlayerY: number;
+	iteration: number;
 	zIndex: number
 	direction: DirectionEnum;
 	score: number;
@@ -18,5 +19,7 @@ export default interface IPlayer {
 	image: string;
 	isAlive: boolean;
 	onBoard: boolean;
-	move(sprites: ISprite[]): PlayerResultEnum;
+	looseLife(): void;
+	move(sprites: ISprite[], blockWidth: number, blockHeight: number): PlayerResultEnum;
+	setStart(sprites: ISprite[]): void;
 }

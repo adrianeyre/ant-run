@@ -13,7 +13,10 @@ export default interface ISprite {
 	direction: DirectionEnum;
 	image: string;
 	type: SpriteTypeEnum;
+	paths: number[][][];
 	move(): void;
-	setType(type: ImageEnum): ImageEnum;
+	setImageType(type: ImageEnum): ImageEnum;
+	setType(type: SpriteTypeEnum): SpriteTypeEnum;
 	setImage(): string;
+	setPath(): void;
 }

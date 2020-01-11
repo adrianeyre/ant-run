@@ -5,6 +5,7 @@ import ISprite from './interfaces/sprite';
 import DirectionEnum from './enums/direction-enum';
 import PlayerResultEnum from './enums/player-result-enum';
 import DirectEnum from './enums/direction-enum';
+import SpriteTypeEnum from './enums/sprite-type-enum';
 
 import playerUp1 from '../images/ant-up1.png';
 import playerUp2 from '../images/ant-up2.png';
@@ -20,10 +21,11 @@ export default class Player implements IPlayer {
 	public visable: boolean;
 	public x: number;
 	public y: number;
+	public blockX: number;
+	public blockY: number
 	public width: number;
 	public height: number;
-	public initialPlayerX: number;
-	public initialPlayerY: number;
+	public iteration: number;
 	public zIndex: number
 	public direction: DirectionEnum;
 	public score: number;
@@ -32,7 +34,7 @@ export default class Player implements IPlayer {
 	public isAlive: boolean;
 	public onBoard: boolean;
 
-	private iteration: boolean;
+	private imageIteration: boolean;
 
 	readonly INITIAL_PLAYER_LIVES: number = 3;
 	readonly INITIAL_PLAYER_X: number = 18;
@@ -50,12 +52,13 @@ export default class Player implements IPlayer {
 	constructor(config: IPlayerProps) {
 		this.key = 'player';
 		this.visable = true;
-		this.iteration = false;
+		this.imageIteration = false;
 		this.onBoard = false;
-		this.initialPlayerX = config.initialPlayerX || this.INITIAL_PLAYER_X;
-		this.initialPlayerY = config.initialPlayerY || this.INITIAL_PLAYER_Y;
-		this.x = this.initialPlayerX;
-		this.y = this.initialPlayerY;
+		this.iteration = 0;
+		this.x = this.INITIAL_PLAYER_X;
+		this.y = this.INITIAL_PLAYER_Y;
+		this.blockX = 0;
+		this.blockY = 0;
 		this.width = this.PLAYER_WIDTH;
 		this.height = this.PLATER_HEIGHT;
 		this.zIndex = this.PLAYER_ZINDEX;
@@ -68,22 +71,150 @@ export default class Player implements IPlayer {
 		this.setImage();
 	}
 
-	public move = (sprites: ISprite[]): PlayerResultEnum => {
-		let x = this.x;
-		let y = this.y;
+	public setStart = (sprites: ISprite[]): void => {
+		const sprite = sprites.find((spr: ISprite) => spr.type === SpriteTypeEnum.START);
+		if (!sprite) throw new Error('Start block not found!');
+
+		this.setPlace(sprite);
+	}
+
+	public looseLife = (): void => {
+		this.lives --;
+		if (this.lives < 1) this.isAlive = false;
+	}
+
+	public move = (sprites: ISprite[], blockWidth: number, blockHeight: number): PlayerResultEnum => {
+		let x = this.x,
+			y = this.y,
+			blockX = this.blockX,
+			blockY = this.blockY;
 
 		switch (this.direction) {
+			case DirectEnum.UP:
+				y--; blockY--; break;
 			case DirectEnum.RIGHT:
-				x++; break;
+				x++; blockX++; break;
+			case DirectEnum.DOWN:
+				y++; blockY++; break;
+			case DirectEnum.LEFT:
+				x--; blockX--; break;
+		}
+
+		if (blockX < 0) blockX = 2;
+		if (blockX > 2) blockX = 0;
+		if (blockY < 0) blockY = 2;
+		if (blockY > 2) blockY = 0;
+
+		const sprite = this.findSprite(sprites, blockWidth, blockHeight, x, y);
+		if (!sprite) {
+			this.goDownHole();
+			return PlayerResultEnum.SAFE;
+		}
+
+		const path = sprite.paths[sprite.direction];
+		if (path[blockY][blockX] === 0 && this.blockX === 1 && this.blockY === 1) {
+			return this.updateDirection(path, sprites, blockWidth, blockHeight);
+		}
+
+		if (path[blockY][blockX] === 0) {
+			return PlayerResultEnum.DEAD;
 		}
 
 		this.x = x;
 		this.y = y;
-		this.iteration = !this.iteration;
+		this.blockX = blockX;
+		this.blockY = blockY;
+		this.imageIteration = !this.imageIteration;
 		this.setImage();
 
 		return PlayerResultEnum.SAFE;
 	}
 
-	private setImage = (): string => this.image = this.playerImages[this.direction][this.iteration ? 0 : 1];
+	private updateDirection = (path: number[][], sprites: ISprite[], blockWidth: number, blockHeight: number): PlayerResultEnum => {
+		const newDirection = this.changeDirection(path);
+		if (newDirection === DirectionEnum.DEAD) return PlayerResultEnum.DEAD;
+
+		this.direction = newDirection;
+		this.setImage();
+		this.move(sprites, blockWidth, blockHeight);
+
+		return PlayerResultEnum.SAFE;
+	}
+
+	private goDownHole = () => {
+		switch (this.direction) {
+			case DirectionEnum.UP:
+				this.y = 24;
+				this.blockY = 2;
+				break;
+			case DirectionEnum.RIGHT:
+				this.x = 10;
+				this.blockX = 0;
+				break;
+			case DirectionEnum.DOWN:
+				this.y = 7;
+				this.blockY = 0;
+				break;
+			case DirectionEnum.LEFT:
+				this.x = 33;
+				this.blockX = 2;
+				break;
+		}
+	}
+
+	private findSprite = (sprites: ISprite[], blockWidth: number, blockHeight: number, x: number, y: number): ISprite | undefined =>
+		sprites.find((spr: ISprite) =>
+			x >= spr.x &&
+			x < spr.x + blockWidth &&
+			y >= spr.y &&
+			y < spr.y + blockHeight
+		)
+
+	private setPlace = (sprite: ISprite): void => {
+		const path = sprite.paths[sprite.direction];
+		this.x = sprite.x + 1
+		this.y = sprite.y + 1
+		this.blockX = 1;
+		this.blockY = 1;
+		this.direction = sprite.direction;
+		this.setImage();
+
+		this.addItteration(path.length);
+	}
+
+	private addItteration = (max: number) => {
+		this.iteration ++;
+
+		if (this.iteration >= max) this.iteration = 0;
+	}
+
+	private changeDirection = (path: number[][]): DirectionEnum => {
+		switch (this.direction) {
+			case DirectionEnum.UP:
+				if (this.tryRight(path)) return DirectionEnum.RIGHT;
+				if (this.tryLeft(path)) return DirectionEnum.LEFT;
+				break;
+			case DirectionEnum.RIGHT:
+				if (this.tryUp(path)) return DirectionEnum.UP;
+				if (this.tryDown(path)) return DirectionEnum.DOWN;
+				break;
+			case DirectionEnum.DOWN:
+				if (this.tryLeft(path)) return DirectionEnum.LEFT;
+				if (this.tryRight(path)) return DirectionEnum.RIGHT;
+				break;
+			case DirectionEnum.LEFT:
+				if (this.tryDown(path)) return DirectionEnum.DOWN;
+				if (this.tryUp(path)) return DirectionEnum.UP;
+				break;
+		}
+
+		return DirectionEnum.DEAD;
+	}
+
+	private tryUp = (path: number[][]) => path[this.blockY - 1][this.blockX] === 1;
+	private tryDown = (path: number[][]) => path[this.blockY + 1][this.blockX] === 1;
+	private tryRight = (path: number[][]) => path[this.blockY][this.blockX + 1] === 1;
+	private tryLeft = (path: number[][]) => path[this.blockY][this.blockX - 1] === 1;
+
+	private setImage = (): string => this.image = this.playerImages[this.direction][this.imageIteration ? 0 : 1];
 }

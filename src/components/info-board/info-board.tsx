@@ -2,7 +2,8 @@ import React from 'react';
 
 import IInfoBoardProps from './interfaces/info-board-props';
 
-// import player from '../../images/player.png';
+import antRight1 from '../../images/ant-right1.png';
+import antLeft1 from '../../images/ant-left1.png';
 
 import './styles/info-board.scss';
 
@@ -10,9 +11,9 @@ export default class InfoBoard extends React.Component<IInfoBoardProps, {}> {
 	public render() {
 		return <div className="info-board" style={ this.styleInfoBoard() }>
 			<div className="info-board-header">
-				{/* <img src={ player } alt="player" /> */}
+				<img src={ antRight1 } alt="player" />
 				<span className="header-text">Ant Run</span>
-				{/* <img src={player } alt="player" /> */}
+				<img src={ antLeft1 } alt="player" />
 			</div>
 
 			{ this.props.gameOver && <div className="game-over-area">
@@ -21,7 +22,7 @@ export default class InfoBoard extends React.Component<IInfoBoardProps, {}> {
 			</div> }
 
 			<div className="info-board-instructions">
-				<p></p>
+				<p>You must navigate the ant around the board using the paths. Falling into an empty block will kill your ant. Use the holes around the edges of the board to jump to the opposite block.</p>
 			</div>
 
 			<div className="button-area">

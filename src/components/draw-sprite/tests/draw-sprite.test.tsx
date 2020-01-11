@@ -9,10 +9,13 @@ describe('Draw Sprite', () => {
 	it('Should render correctly', () => {
 		const defaultProps: IDrawSpriteProps = {
 			sprite: new Player({}),
-			image: 'image',
+			height: 1,
+			width: 1,
+			containerWidth: 100,
+			handleClick: jest.fn(),
 		};
 
-		const drawFish = shallow(<DrawSprite {...defaultProps} />);
-		expect(drawFish).toMatchSnapshot();
+		const drawSprite = shallow(<DrawSprite {...defaultProps} />);
+		expect(drawSprite).toMatchSnapshot();
 	});
 });

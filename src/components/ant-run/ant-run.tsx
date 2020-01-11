@@ -8,10 +8,11 @@ import DrawSprite from '../draw-sprite/draw-sprite';
 import InfoBoard from '../info-board/info-board';
 
 import './styles/ant-run.scss';
+import PlayerResultEnum from 'classes/enums/player-result-enum';
 
 export default class AntRun extends React.Component<IAntRunProps, IAntRunState> {
-	private SPRITE_BLOCKS_WIDTH: number = 143;
-	private SPRITE_BLOCKS_HEIGHT: number = 96;
+	private SPRITE_BLOCKS_WIDTH: number = 41;
+	private SPRITE_BLOCKS_HEIGHT: number = 30;
 	private container: any;
 
 	constructor(props: IAntRunProps) {
@@ -46,9 +47,9 @@ export default class AntRun extends React.Component<IAntRunProps, IAntRunState> 
 			{ !this.state.game.isGameInPlay && <InfoBoard gameOver={ this.state.game.player.lives < 1 } startGame={ this.startGame } score={ this.state.game.player.score } containerHeight={ this.state.containerHeight } /> }
 
 			{ this.state.game.isGameInPlay && <div className="play-area">
-				{ this.state.game.sprites?.map((sprite: ISprite) => <DrawSprite key={ sprite.key } sprite={ sprite } height={ this.state.spriteHeight } width={ this.state.spriteWidth } containerWidth={ this.state.containerWidth } />) }
+				{ this.state.game.sprites?.map((sprite: ISprite) => <DrawSprite key={ sprite.key } sprite={ sprite } handleClick={ this.handleClick } height={ this.state.spriteHeight } width={ this.state.spriteWidth } containerWidth={ this.state.containerWidth } />) }
 
-				<DrawSprite sprite={ this.state.game.player } height={ this.state.spriteHeight } width={ this.state.spriteWidth } containerWidth={ this.state.containerWidth } />
+				<DrawSprite sprite={ this.state.game.player } handleClick={ this.handleClickPlayer }height={ this.state.spriteHeight } width={ this.state.spriteWidth } containerWidth={ this.state.containerWidth } />
 			</div> }
 		</div>
 	}
@@ -106,5 +107,16 @@ export default class AntRun extends React.Component<IAntRunProps, IAntRunState> 
 
 		this.stopTimer();
 		this.startTimer();
+	}
+
+	private handleClick = async (sprite: ISprite) => {
+		const game = this.state.game;
+		game.handleInput(PlayerResultEnum.MOVE, sprite);
+
+		await this.setState(() => ({ game }));
+	}
+
+	private handleClickPlayer = (sprite: ISprite) => {
+
 	}
 }

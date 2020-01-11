@@ -26,16 +26,16 @@ export default class Player implements IPlayer {
 	public isAlive: boolean;
 
 	readonly INITIAL_PLAYER_LIVES: number = 3;
-	readonly INITIAL_PLAYER_X: number = 50;
-	readonly INITIAL_PLAYER_Y: number = 50;
-	readonly PLAYER_WIDTH: number = 3;
-	readonly PLATER_HEIGHT: number = 3;
+	readonly INITIAL_PLAYER_X: number = 18;
+	readonly INITIAL_PLAYER_Y: number = 3;
+	readonly PLAYER_WIDTH: number = 1;
+	readonly PLATER_HEIGHT: number = 1;
 	readonly PLAYER_ZINDEX: number = 6000;
 	readonly playerImages: string[] = [
 		playerUp,
+		playerRight,
 		playerDown,
 		playerLeft,
-		playerRight,
 	];
 
 	constructor(config: IPlayerProps) {

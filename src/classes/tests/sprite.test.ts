@@ -3,6 +3,7 @@ import SpriteTypeEnum from '../enums/sprite-type-enum';
 
 import Sprite from '../sprite';
 import ISpriteProps from '../interfaces/sprite-props';
+import ImageEnum from 'classes/enums/image-enum';
 
 describe('Sprite', () => {
 	let defaultConfig: ISpriteProps
@@ -15,10 +16,9 @@ describe('Sprite', () => {
 			y: 10,
 			width: 8,
 			height: 8,
-			xOffset: false,
 			direction: DirectionEnum.RIGHT,
-			image: 'start',
-			type: SpriteTypeEnum.START,
+			image: ImageEnum.START,
+			type: SpriteTypeEnum.BLOCK,
 		}
 	})
 
@@ -33,7 +33,7 @@ describe('Sprite', () => {
 		expect(sprite.height).toEqual(8);
 		expect(sprite.zIndex).toEqual(5000);
 		expect(sprite.direction).toEqual(DirectionEnum.RIGHT);
-		expect(sprite.image).toEqual('block9.png');
-		expect(sprite.type).toEqual(SpriteTypeEnum.START);
+		expect(sprite.image).toEqual('block10.png');
+		expect(sprite.type).toEqual(SpriteTypeEnum.BLOCK);
 	});
 });

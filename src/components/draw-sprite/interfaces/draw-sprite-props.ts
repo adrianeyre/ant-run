@@ -6,4 +6,5 @@ export default interface IDrawSpriteProps {
 	height: number;
 	width: number;
 	containerWidth: number;
+	handleClick(sprite: IPlayer | ISprite): void;
 }

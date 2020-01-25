@@ -6,6 +6,7 @@ export default interface IAntRunState {
 	spriteHeight: number;
 	containerWidth: number
 	containerHeight: number;
+	containerMargin: number;
 	timer?: any;
 	timerInterval: number;
 }

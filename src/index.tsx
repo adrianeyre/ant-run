@@ -6,7 +6,13 @@ import 'react-app-polyfill/stable';
 import AntRun from './components/ant-run/ant-run';
 
 import './index.scss';
-import * as serviceWorker from './serviceWorker';
+import reportWebVitals from './reportWebVitals';
 
-ReactDOM.render(<AntRun />, document.getElementById('root'));
-serviceWorker.unregister();
+ReactDOM.render(
+    <React.StrictMode>
+        <AntRun />
+    </React.StrictMode>,
+    document.getElementById('root')
+);
+
+reportWebVitals();

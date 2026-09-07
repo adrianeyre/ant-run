@@ -22,11 +22,11 @@ export default class Player implements IPlayer {
 	public x: number;
 	public y: number;
 	public blockX: number;
-	public blockY: number
+	public blockY: number;
 	public width: number;
 	public height: number;
 	public iteration: number;
-	public zIndex: number
+	public zIndex: number;
 	public direction: DirectionEnum;
 	public score: number;
 	public lives: number;
@@ -68,23 +68,23 @@ export default class Player implements IPlayer {
 		this.direction = DirectionEnum.RIGHT;
 		this.score = 0;
 		this.lives = config.initialPlayerLives || this.INITIAL_PLAYER_LIVES;
-		this.image = ''
+		this.image = '';
 		this.isAlive = true;
 
 		this.setImage();
 	}
-	
-	public spaceMovedScore = (): number => this.score += this.SPACE_MOVED_SCORE;
-	public nextLevelScore = (): number => this.score += this.NEXT_LEVEL_SCORE;
-	public playerBonus = (): number => this.score += this.BONUS_SCORE;
+
+	public spaceMovedScore = (): number => (this.score += this.SPACE_MOVED_SCORE);
+	public nextLevelScore = (): number => (this.score += this.NEXT_LEVEL_SCORE);
+	public playerBonus = (): number => (this.score += this.BONUS_SCORE);
 
 	public looseLife = (): void => {
-		this.lives --;
+		this.lives--;
 		if (this.lives < 1) this.isAlive = false;
-	}
+	};
 
 	public moveIntro = (sprites: ISprite[]): void => {
-		this.x ++;
+		this.x++;
 
 		if (this.x > 32) {
 			this.setStart(sprites);
@@ -94,15 +94,15 @@ export default class Player implements IPlayer {
 
 		this.imageIteration = !this.imageIteration;
 		this.setImage();
-	}
+	};
 
 	public resetInto = (): void => {
 		this.x = this.INITIAL_PLAYER_X;
 		this.y = this.INITIAL_PLAYER_Y;
-		this.direction = DirectionEnum.RIGHT
+		this.direction = DirectionEnum.RIGHT;
 		this.onBoard = false;
 		this.setImage();
-	}
+	};
 
 	public move = (sprites: ISprite[], blockWidth: number, blockHeight: number): PlayerResultEnum => {
 		let x = this.x,
@@ -113,27 +113,39 @@ export default class Player implements IPlayer {
 
 		switch (this.direction) {
 			case DirectEnum.UP:
-				y--; blockY--; break;
+				y--;
+				blockY--;
+				break;
 			case DirectEnum.RIGHT:
-				x++; blockX++; break;
+				x++;
+				blockX++;
+				break;
 			case DirectEnum.DOWN:
-				y++; blockY++; break;
+				y++;
+				blockY++;
+				break;
 			case DirectEnum.LEFT:
-				x--; blockX--; break;
+				x--;
+				blockX--;
+				break;
 		}
 
 		let isNewBlock = false;
 		if (blockX < 0) {
-			blockX = 2; isNewBlock = true;
+			blockX = 2;
+			isNewBlock = true;
 		}
 		if (blockX > 2) {
-			blockX = 0; isNewBlock = true;
+			blockX = 0;
+			isNewBlock = true;
 		}
 		if (blockY < 0) {
-			blockY = 2; isNewBlock = true;
+			blockY = 2;
+			isNewBlock = true;
 		}
 		if (blockY > 2) {
-			blockY = 0; isNewBlock = true;
+			blockY = 0;
+			isNewBlock = true;
 		}
 
 		if (isNewBlock) newBlockResult = this.hideBlock(sprites, blockWidth, blockHeight);
@@ -165,17 +177,28 @@ export default class Player implements IPlayer {
 		this.setImage();
 
 		return isNewBlock ? newBlockResult : PlayerResultEnum.SAFE;
-	}
+	};
 
-	private hideBlock = (sprites: ISprite[], blockWidth: number, blockHeight: number): PlayerResultEnum => {
+	private hideBlock = (
+		sprites: ISprite[],
+		blockWidth: number,
+		blockHeight: number,
+	): PlayerResultEnum => {
 		const sprite = this.findSprite(sprites, blockWidth, blockHeight, this.x, this.y);
 		if (!sprite) throw new Error('Cannot find block player was just on!');
 
 		sprite.visable = false;
-		return sprite.type === SpriteTypeEnum.BONUS ? PlayerResultEnum.BONUS_BLOCK : PlayerResultEnum.NEW_BLOCK
-	}
+		return sprite.type === SpriteTypeEnum.BONUS
+			? PlayerResultEnum.BONUS_BLOCK
+			: PlayerResultEnum.NEW_BLOCK;
+	};
 
-	private updateDirection = (path: number[][], sprites: ISprite[], blockWidth: number, blockHeight: number): PlayerResultEnum => {
+	private updateDirection = (
+		path: number[][],
+		sprites: ISprite[],
+		blockWidth: number,
+		blockHeight: number,
+	): PlayerResultEnum => {
 		const newDirection = this.changeDirection(path);
 		if (newDirection === DirectionEnum.DEAD) return PlayerResultEnum.DEAD;
 
@@ -184,7 +207,7 @@ export default class Player implements IPlayer {
 		this.move(sprites, blockWidth, blockHeight);
 
 		return PlayerResultEnum.SAFE;
-	}
+	};
 
 	private goDownHole = () => {
 		switch (this.direction) {
@@ -205,33 +228,37 @@ export default class Player implements IPlayer {
 				this.blockX = 3;
 				break;
 		}
-	}
+	};
 
-	private findSprite = (sprites: ISprite[], blockWidth: number, blockHeight: number, x: number, y: number): ISprite | undefined =>
-		sprites.find((spr: ISprite) =>
-			x >= spr.x &&
-			x < spr.x + blockWidth &&
-			y >= spr.y &&
-			y < spr.y + blockHeight
-		)
+	private findSprite = (
+		sprites: ISprite[],
+		blockWidth: number,
+		blockHeight: number,
+		x: number,
+		y: number,
+	): ISprite | undefined =>
+		sprites.find(
+			(spr: ISprite) =>
+				x >= spr.x && x < spr.x + blockWidth && y >= spr.y && y < spr.y + blockHeight,
+		);
 
 	private setPlace = (sprite: ISprite): void => {
 		const path = sprite.paths[sprite.direction];
-		this.x = sprite.x + 1
-		this.y = sprite.y + 1
+		this.x = sprite.x + 1;
+		this.y = sprite.y + 1;
 		this.blockX = 1;
 		this.blockY = 1;
 		this.direction = sprite.direction;
 		this.setImage();
 
 		this.addItteration(path.length);
-	}
+	};
 
 	private addItteration = (max: number) => {
-		this.iteration ++;
+		this.iteration++;
 
 		if (this.iteration >= max) this.iteration = 0;
-	}
+	};
 
 	private changeDirection = (path: number[][]): DirectionEnum => {
 		switch (this.direction) {
@@ -254,18 +281,19 @@ export default class Player implements IPlayer {
 		}
 
 		return DirectionEnum.DEAD;
-	}
+	};
 
 	private setStart = (sprites: ISprite[]): void => {
 		const sprite = sprites.find((spr: ISprite) => spr.type === SpriteTypeEnum.START);
 		if (!sprite) throw new Error('Start block not found!');
 
 		this.setPlace(sprite);
-	}
+	};
 
 	private tryUp = (path: number[][]) => path[this.blockY - 1][this.blockX] === 1;
 	private tryDown = (path: number[][]) => path[this.blockY + 1][this.blockX] === 1;
 	private tryRight = (path: number[][]) => path[this.blockY][this.blockX + 1] === 1;
 	private tryLeft = (path: number[][]) => path[this.blockY][this.blockX - 1] === 1;
-	private setImage = (): string => this.image = this.playerImages[this.direction][this.imageIteration ? 0 : 1];
+	private setImage = (): string =>
+		(this.image = this.playerImages[this.direction][this.imageIteration ? 0 : 1]);
 }

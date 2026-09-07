@@ -1,4 +1,5 @@
-import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
 import DrawSprite from '../draw-sprite';
 import IDrawSpriteProps from '../interfaces/draw-sprite-props';
@@ -11,10 +12,29 @@ describe('Draw Sprite', () => {
 			height: 1,
 			width: 1,
 			containerWidth: 100,
-			handleClick: jest.fn(),
+			handleClick: vi.fn(),
 		};
 
-		const drawSprite = shallow(<DrawSprite {...defaultProps} />);
-		expect(drawSprite).toMatchSnapshot();
+		const { container } = render(<DrawSprite {...defaultProps} />);
+
+		expect(container.firstChild).toMatchSnapshot();
+	});
+
+	it('Should report a click back with the sprite it drew', async () => {
+		const handleClick = vi.fn();
+		const sprite = new Player({});
+		const { getByAltText } = render(
+			<DrawSprite
+				sprite={sprite}
+				height={1}
+				width={1}
+				containerWidth={100}
+				handleClick={handleClick}
+			/>,
+		);
+
+		getByAltText('sprite').click();
+
+		expect(handleClick).toHaveBeenCalledWith(sprite);
 	});
 });

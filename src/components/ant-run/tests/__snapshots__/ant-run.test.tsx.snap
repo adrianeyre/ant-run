@@ -1,3 +1,86 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SAnt Run Should render correctly 1`] = `ShallowWrapper {}`;
+exports[`Ant Run > Should render correctly 1`] = `
+<div
+  class="ant-run-play-container"
+  style="max-width: 0px; margin-left: 512px;"
+>
+  <div
+    style="position: absolute; width: 100%; max-width: 0px;"
+  >
+    <div
+      class="game-status-top"
+    >
+      <div
+        class="game-status-left"
+      >
+        1-UP 
+        <span
+          class="variable-text"
+        >
+          0
+        </span>
+      </div>
+      <div
+        class="game-status-right"
+      >
+        LIVES
+         
+        <img
+          alt="lives"
+          class="player-lives"
+          src="/src/images/lives.png"
+        />
+        <img
+          alt="lives"
+          class="player-lives"
+          src="/src/images/lives.png"
+        />
+        <img
+          alt="lives"
+          class="player-lives"
+          src="/src/images/lives.png"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="info-board"
+    style="width: 100%; max-width: 0px;"
+  >
+    <div
+      class="info-board-header"
+    >
+      <img
+        alt="player"
+        src="/src/images/ant-right1.png"
+      />
+      <span
+        class="header-text"
+      >
+        Ant Run
+      </span>
+      <img
+        alt="player"
+        src="/src/images/ant-left1.png"
+      />
+    </div>
+    <div
+      class="info-board-instructions"
+    >
+      <p>
+        You must navigate the ant around the board using the paths. Falling into an empty block will kill your ant. Use the holes around the edges of the board to jump to the opposite block.
+      </p>
+    </div>
+    <div
+      class="button-area"
+    >
+      <button
+        type="button"
+      >
+        Play Game
+      </button>
+    </div>
+  </div>
+</div>
+`;

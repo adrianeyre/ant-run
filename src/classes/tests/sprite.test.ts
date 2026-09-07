@@ -1,3 +1,5 @@
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import DirectionEnum from '../enums/direction-enum';
 import SpriteTypeEnum from '../enums/sprite-type-enum';
 
@@ -6,7 +8,7 @@ import ISpriteProps from '../interfaces/sprite-props';
 import ImageEnum from 'classes/enums/image-enum';
 
 describe('Sprite', () => {
-	let defaultConfig: ISpriteProps
+	let defaultConfig: ISpriteProps;
 
 	beforeEach(() => {
 		defaultConfig = {
@@ -19,8 +21,8 @@ describe('Sprite', () => {
 			direction: DirectionEnum.RIGHT,
 			image: ImageEnum.START,
 			type: SpriteTypeEnum.BLOCK,
-		}
-	})
+		};
+	});
 
 	it('Should create Sprite class', () => {
 		const sprite = new Sprite(defaultConfig);
@@ -33,7 +35,7 @@ describe('Sprite', () => {
 		expect(sprite.height).toEqual(8);
 		expect(sprite.zIndex).toEqual(5000);
 		expect(sprite.direction).toEqual(DirectionEnum.RIGHT);
-		expect(sprite.image).toEqual('block9.png');
+		expect(sprite.image).toContain('block9.png');
 		expect(sprite.type).toEqual(SpriteTypeEnum.BLOCK);
 	});
 });

@@ -15,7 +15,6 @@ export default class Game implements IGame {
 	public board: IBoard;
 	public time: ITime;
 	public level: number;
-	public timer: any;
 	public iteration: number;
 	public isGameInPlay: boolean;
 	public timerInterval: number;
@@ -23,9 +22,9 @@ export default class Game implements IGame {
 	readonly DEFAULT_TIMER_INTERVAL: number = 800;
 	readonly DEFAULT_TIMER_DECREMENT: number = 50;
 	readonly DEFAULT_TIMER_MIN: number = 50;
-	
+
 	readonly MAX_BLOCKS: number = 30;
-	
+
 	constructor(config: IAntRunProps) {
 		this.player = new Player(config);
 		this.board = new Board();
@@ -42,17 +41,23 @@ export default class Game implements IGame {
 	public handleInput = (playerResult: PlayerResultEnum, sprite?: ISprite): void => {
 		switch (playerResult) {
 			case PlayerResultEnum.SAFE:
-				this.playerSafe(); break;
+				this.playerSafe();
+				break;
 			case PlayerResultEnum.MOVE:
-				this.moveBlock(sprite); break;
+				this.moveBlock(sprite);
+				break;
 			case PlayerResultEnum.DEAD:
-				this.looseLife(); break;
+				this.looseLife();
+				break;
 			case PlayerResultEnum.NEW_BLOCK:
-				this.updateTime(); break;
+				this.updateTime();
+				break;
 			case PlayerResultEnum.BONUS_BLOCK:
-				this.playerBonus(); this.updateTime(); break;
+				this.playerBonus();
+				this.updateTime();
+				break;
 		}
-	}
+	};
 
 	public handleTimer = (): void => {
 		if (this.player.onBoard) {
@@ -60,40 +65,41 @@ export default class Game implements IGame {
 		} else {
 			this.player.moveIntro(this.sprites);
 		}
-	}
+	};
 
 	private updateTime = (): void => {
-		this.iteration ++;
+		this.iteration++;
 		this.time.show(this.iteration, this.sprites);
 
 		if (this.iteration >= this.MAX_BLOCKS) this.nextLevel();
-	}
+	};
 
-	private moveBlock = (sprite?: ISprite): void | null => sprite ? sprite.move(this.player.x, this.player.y) : null
+	private moveBlock = (sprite?: ISprite): void | null =>
+		sprite ? sprite.move(this.player.x, this.player.y) : null;
 
 	private reset = (): void => {
 		this.iteration = 0;
 		this.sprites = this.board.setBoard([]);
 		this.time.setTime(this.sprites);
 		this.player.resetInto();
-	}
+	};
 
 	private playerSafe = (): number => this.player.spaceMovedScore();
 
 	private looseLife = (): void => {
 		this.player.looseLife();
 		this.reset();
-		
+
 		if (!this.player.isAlive) this.isGameInPlay = false;
-	}
+	};
 
 	private nextLevel = (): void => {
-		this.level ++;
+		this.level++;
 		this.timerInterval -= this.DEFAULT_TIMER_DECREMENT;
 		if (this.timerInterval < this.DEFAULT_TIMER_MIN) this.timerInterval = this.DEFAULT_TIMER_MIN;
 		this.player.nextLevelScore();
 		this.reset();
-	}
+	};
 
 	private playerBonus = (): number => this.player.playerBonus();
 }

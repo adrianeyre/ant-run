@@ -47,7 +47,7 @@ export default class Sprite implements ISprite {
 		start: [block8, block9, block10, block11],
 		bonus: [block12, block13, block12, block13],
 		time: [time, time, time, time],
-	}
+	};
 
 	constructor(config: ISpriteProps) {
 		this.imageType = config.image;
@@ -73,29 +73,33 @@ export default class Sprite implements ISprite {
 
 		switch (this.direction) {
 			case DirectionEnum.UP:
-				this.direction = DirectionEnum.RIGHT; break;
+				this.direction = DirectionEnum.RIGHT;
+				break;
 			case DirectionEnum.RIGHT:
-				this.direction = DirectionEnum.DOWN; break;
+				this.direction = DirectionEnum.DOWN;
+				break;
 			case DirectionEnum.DOWN:
-				this.direction = DirectionEnum.LEFT; break;
+				this.direction = DirectionEnum.LEFT;
+				break;
 			case DirectionEnum.LEFT:
-				this.direction = DirectionEnum.UP; break;
+				this.direction = DirectionEnum.UP;
+				break;
 		}
 
 		this.setImage();
-	}
+	};
 
-	public setImageType = (imageType: ImageEnum): ImageEnum => this.imageType = imageType;
-	public setType = (type: SpriteTypeEnum): SpriteTypeEnum => this.type = type;
-	public setImage = (): string => this.image = this.playerImages[this.imageType][this.direction];
+	public setImageType = (imageType: ImageEnum): ImageEnum => (this.imageType = imageType);
+	public setType = (type: SpriteTypeEnum): SpriteTypeEnum => (this.type = type);
+	public setImage = (): string => (this.image = this.playerImages[this.imageType][this.direction]);
 	public setPath = (): void => {
 		const data = blocksData.default.find((data: IBlocks) => data.key === this.imageType);
 		if (!data) throw new Error('Cannot find paths data');
 
 		this.paths = data.paths;
-	}
+	};
 
-	private playerOnSprite = (playerX: number , playerY: number) =>
+	private playerOnSprite = (playerX: number, playerY: number) =>
 		playerX >= this.x &&
 		playerX < this.x + this.width &&
 		playerY >= this.y &&

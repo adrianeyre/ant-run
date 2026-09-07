@@ -10,7 +10,6 @@ export default interface IGame {
 	board: IBoard;
 	time: ITime;
 	level: number;
-	timer: any;
 	iteration: number;
 	isGameInPlay: boolean;
 	timerInterval: number;

@@ -4,9 +4,9 @@ export default interface IAntRunState {
 	game: IGame;
 	spriteWidth: number;
 	spriteHeight: number;
-	containerWidth: number
+	containerWidth: number;
 	containerHeight: number;
 	containerMargin: number;
-	timer?: any;
+	timer?: ReturnType<typeof setInterval>;
 	timerInterval: number;
 }

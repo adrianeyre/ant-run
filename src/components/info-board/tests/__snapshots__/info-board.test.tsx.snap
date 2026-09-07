@@ -1,3 +1,58 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Info Board Should render correctly 1`] = `ShallowWrapper {}`;
+exports[`Info Board > Should render correctly 1`] = `
+<div
+  class="info-board"
+  style="width: 100%; max-width: 1000px;"
+>
+  <div
+    class="info-board-header"
+  >
+    <img
+      alt="player"
+      src="/src/images/ant-right1.png"
+    />
+    <span
+      class="header-text"
+    >
+      Ant Run
+    </span>
+    <img
+      alt="player"
+      src="/src/images/ant-left1.png"
+    />
+  </div>
+  <div
+    class="game-over-area"
+  >
+    <div
+      class="game-over-title"
+    >
+      Game Over
+    </div>
+    <div
+      class="game-over-text"
+    >
+      You scored 
+      1000
+      , better luck next time!
+    </div>
+  </div>
+  <div
+    class="info-board-instructions"
+  >
+    <p>
+      You must navigate the ant around the board using the paths. Falling into an empty block will kill your ant. Use the holes around the edges of the board to jump to the opposite block.
+    </p>
+  </div>
+  <div
+    class="button-area"
+  >
+    <button
+      type="button"
+    >
+      Play Game
+    </button>
+  </div>
+</div>
+`;

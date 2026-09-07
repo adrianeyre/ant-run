@@ -8,11 +8,11 @@ export default interface IPlayer {
 	x: number;
 	y: number;
 	blockX: number;
-	blockY: number
+	blockY: number;
 	width: number;
 	height: number;
 	iteration: number;
-	zIndex: number
+	zIndex: number;
 	direction: DirectionEnum;
 	score: number;
 	lives: number;

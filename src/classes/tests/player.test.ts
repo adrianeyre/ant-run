@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import DirectionEnum from '../enums/direction-enum';
 
 import Player from '../player';
@@ -16,7 +18,7 @@ describe('Player', () => {
 		expect(player.direction).toEqual(DirectionEnum.RIGHT);
 		expect(player.score).toEqual(0);
 		expect(player.lives).toEqual(3);
-		expect(player.image).toEqual('ant-right2.png');
+		expect(player.image).toContain('ant-right2.png');
 		expect(player.isAlive).toEqual(true);
 	});
 });

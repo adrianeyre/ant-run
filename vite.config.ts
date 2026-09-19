@@ -3,13 +3,13 @@ import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
 /**
- * The site is published to https://adrianeyre.github.io/ant-run/, which is a
- * project page rather than a user page — every asset URL therefore has to carry
- * the repository name. `./` would work for the deployed site but breaks the dev
- * server's client-side paths, so the prefix is written out.
+ * The site is published to https://ant-run.adrianeyre.co.uk, a custom domain
+ * served from the root of its own host, so assets sit at `/assets/...` with no
+ * repository-name prefix. The old `/ant-run/` base was correct only for the
+ * github.io project page and 404s every asset once the custom domain is in use.
  */
 export default defineConfig({
-	base: '/ant-run/',
+	base: '/',
 	plugins: [react()],
 	resolve: {
 		// `classes/...` and `components/...` were absolute imports under Create

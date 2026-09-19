@@ -1,6 +1,6 @@
 {
 	"name": "ant-run",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"private": true,
 	"description": "Ant Run — a browser maze game where you steer an ant across rotating path blocks, written in TypeScript and React",
 	"keywords": [

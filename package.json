@@ -19,7 +19,7 @@
 	"bugs": {
 		"url": "https://github.com/adrianeyre/ant-run/issues"
 	},
-	"homepage": "https://adrianeyre.github.io/ant-run/",
+	"homepage": "https://ant-run.adrianeyre.co.uk",
 	"type": "module",
 	"engines": {
 		"node": ">=26"

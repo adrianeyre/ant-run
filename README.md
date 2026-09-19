@@ -42,4 +42,4 @@ GitHub Pages.
 [![Screenshot](https://raw.githubusercontent.com/adrianeyre/ant-run/master/src/images/screenshot2.png)](https://raw.githubusercontent.com/adrianeyre/ant-run/master/src/images/screenshot2.png "Game View")
 
 ## <a name="Play">Ant Run</a>
-* [Ant Run](https://adrianeyre.github.io/ant-run/)
+* [Ant Run](https://ant-run.adrianeyre.co.uk)
